@@ -69,5 +69,16 @@ class TestGLImage(unittest.TestCase):
         self.assertTrue(_glimage.r8_to_rgba8(3, 1, input_pixels, output_pixels))
         self.assertTrue(np.array_equal(output_pixels, expected_output_pixels))
 
+    def test_rgb8_and_rgba8(self):
+        input_pixels = np.array([0x10, 0x30, 0x50, 0x70, 0x90, 0xB0], dtype=np.uint8)
+	expected_output_pixels = np.array([0x10, 0x30, 0x50, 0xFF,
+            0x70, 0x90, 0xB0, 0xFF], dtype=np.uint8)
+        output_pixels = np.empty(shape=(8,), dtype=np.uint8)
+        self.assertTrue(_glimage.rgb8_to_rgba8(2, 1, input_pixels, output_pixels))
+        self.assertTrue(np.array_equal(output_pixels, expected_output_pixels))
+        output_pixels = np.empty(shape=(6,), dtype=np.uint8)
+        self.assertTrue(_glimage.rgba8_to_rgb8(2, 1, expected_output_pixels, output_pixels))
+        self.assertTrue(np.array_equal(output_pixels, input_pixels))
+
 if __name__ == '__main__':
     unittest.main()

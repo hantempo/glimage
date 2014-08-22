@@ -1,5 +1,9 @@
 #include "glimage.h"
 
+////////////////////////////////////////////////////////////////////
+// GL_RED
+////////////////////////////////////////////////////////////////////
+
 bool r8_to_rgba8(unsigned int width, unsigned int height, unsigned char *input_pixels, unsigned char *output_pixels)
 {
     for (unsigned int index = 0; index < width * height; ++index)
@@ -11,6 +15,10 @@ bool r8_to_rgba8(unsigned int width, unsigned int height, unsigned char *input_p
     }
     return true;
 }
+
+////////////////////////////////////////////////////////////////////
+// GL_RGB
+////////////////////////////////////////////////////////////////////
 
 bool rgb565_to_rgba8(unsigned int width, unsigned int height, unsigned short *input_pixels, unsigned char *output_pixels)
 {
@@ -24,6 +32,34 @@ bool rgb565_to_rgba8(unsigned int width, unsigned int height, unsigned short *in
     }
     return true;
 }
+
+bool rgb8_to_rgba8(unsigned int width, unsigned int height, unsigned char *input_pixels, unsigned char *output_pixels)
+{
+    for (unsigned int index = 0; index < width * height; ++index)
+    {
+        *(output_pixels++) = *(input_pixels++);
+        *(output_pixels++) = *(input_pixels++);
+        *(output_pixels++) = *(input_pixels++);
+        *(output_pixels++) = 0xFF;
+    }
+    return true;
+}
+
+bool rgba8_to_rgb8(unsigned int width, unsigned int height, unsigned char *input_pixels, unsigned char *output_pixels)
+{
+    for (unsigned int index = 0; index < width * height; ++index)
+    {
+        *(output_pixels++) = *(input_pixels++);
+        *(output_pixels++) = *(input_pixels++);
+        *(output_pixels++) = *(input_pixels++);
+        input_pixels++;
+    }
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////
+// GL_RGBA
+////////////////////////////////////////////////////////////////////
 
 bool rgba4_to_rgba8(unsigned int width, unsigned int height, unsigned short *input_pixels, unsigned char *output_pixels)
 {
@@ -50,6 +86,10 @@ bool rgba5551_to_rgba8(unsigned int width, unsigned int height, unsigned short *
     }
     return true;
 }
+
+////////////////////////////////////////////////////////////////////
+// GL_RGBA
+////////////////////////////////////////////////////////////////////
 
 bool luminance_alpha_to_rgba8(unsigned int width, unsigned int height, unsigned char *input_pixels, unsigned char *output_pixels)
 {

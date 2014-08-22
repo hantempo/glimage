@@ -5,36 +5,6 @@
 static char module_docstring[] =
     "This module provides some methods to convert pixels of images between different OpenGL formats.";
 
-static PyObject *glimage_r8_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_rgb565_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_rgba4_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_rgba5551_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_luminance_alpha_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_alpha_to_rgba8(PyObject *self, PyObject *args);
-static PyObject *glimage_luminance_to_rgba8(PyObject *self, PyObject *args);
-
-static PyMethodDef module_methods[] = {
-    {"r8_to_rgba8", glimage_r8_to_rgba8, METH_VARARGS, "Convert pixels from GL_R8 to GL_RGBA8"},
-    {"rgb565_to_rgba8", glimage_rgb565_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGB565 to GL_RGBA8"},
-    {"rgba4_to_rgba8", glimage_rgba4_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGBA4 to GL_RGBA8"},
-    {"rgba5551_to_rgba8", glimage_rgba5551_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGBA5551 to GL_RGBA8"},
-    {"luminance_alpha_to_rgba8", glimage_luminance_alpha_to_rgba8, METH_VARARGS, "Convert pixels from GL_LUMINANCE_ALPHA to GL_RGBA8"},
-    {"alpha_to_rgba8", glimage_alpha_to_rgba8, METH_VARARGS, "Convert pixels from GL_ALPHA to GL_RGBA8"},
-    {"luminance_to_rgba8", glimage_luminance_to_rgba8, METH_VARARGS, "Convert pixels from GL_LUMINANCE to GL_RGBA8"},
-
-    {NULL, NULL, 0, NULL}
-};
-
-PyMODINIT_FUNC init_glimage(void)
-{
-    PyObject *m = Py_InitModule3("_glimage", module_methods, module_docstring);
-    if (m == NULL)
-        return;
-
-    /* Load `numpy` functionality. */
-    import_array();
-}
-
 #define DEFINE_CONVERSION_WRAPPER(func_name, input_numpy_type, input_c_type, output_numpy_type, output_c_type) \
 static PyObject *glimage_##func_name(PyObject *self, PyObject *args) \
 { \
@@ -72,9 +42,40 @@ static PyObject *glimage_##func_name(PyObject *self, PyObject *args) \
 }
 
 DEFINE_CONVERSION_WRAPPER(r8_to_rgba8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
+
 DEFINE_CONVERSION_WRAPPER(rgb565_to_rgba8, NPY_UINT16, unsigned short, NPY_UINT8, unsigned char)
+DEFINE_CONVERSION_WRAPPER(rgb8_to_rgba8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
+DEFINE_CONVERSION_WRAPPER(rgba8_to_rgb8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
+
 DEFINE_CONVERSION_WRAPPER(rgba4_to_rgba8, NPY_UINT16, unsigned short, NPY_UINT8, unsigned char)
 DEFINE_CONVERSION_WRAPPER(rgba5551_to_rgba8, NPY_UINT16, unsigned short, NPY_UINT8, unsigned char)
+
 DEFINE_CONVERSION_WRAPPER(luminance_alpha_to_rgba8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
 DEFINE_CONVERSION_WRAPPER(luminance_to_rgba8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
 DEFINE_CONVERSION_WRAPPER(alpha_to_rgba8, NPY_UINT8, unsigned char, NPY_UINT8, unsigned char)
+
+static PyMethodDef module_methods[] = {
+    {"r8_to_rgba8", glimage_r8_to_rgba8, METH_VARARGS, "Convert pixels from GL_R8 to GL_RGBA8"},
+
+    {"rgb565_to_rgba8", glimage_rgb565_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGB565 to GL_RGBA8"},
+    {"rgb8_to_rgba8", glimage_rgb8_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGB8 to GL_RGBA8"},
+    {"rgba8_to_rgb8", glimage_rgba8_to_rgb8, METH_VARARGS, "Convert pixels from GL_RGBA8 to GL_RGB8"},
+
+    {"rgba4_to_rgba8", glimage_rgba4_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGBA4 to GL_RGBA8"},
+    {"rgba5551_to_rgba8", glimage_rgba5551_to_rgba8, METH_VARARGS, "Convert pixels from GL_RGBA5551 to GL_RGBA8"},
+    {"luminance_alpha_to_rgba8", glimage_luminance_alpha_to_rgba8, METH_VARARGS, "Convert pixels from GL_LUMINANCE_ALPHA to GL_RGBA8"},
+    {"alpha_to_rgba8", glimage_alpha_to_rgba8, METH_VARARGS, "Convert pixels from GL_ALPHA to GL_RGBA8"},
+    {"luminance_to_rgba8", glimage_luminance_to_rgba8, METH_VARARGS, "Convert pixels from GL_LUMINANCE to GL_RGBA8"},
+
+    {NULL, NULL, 0, NULL}
+};
+
+PyMODINIT_FUNC init_glimage(void)
+{
+    PyObject *m = Py_InitModule3("_glimage", module_methods, module_docstring);
+    if (m == NULL)
+        return;
+
+    /* Load `numpy` functionality. */
+    import_array();
+}
